@@ -27,6 +27,9 @@
 source /home/cedar/.bashrc
 source /home/cedar/opt/conda/etc/profile.d/conda.sh
 
+# Setting nullglob so that globs that match nothing don't make errors
+shopt -s nullglob
+
 # Activating the conda environment
 conda activate make_video_from_images
 
