@@ -9,10 +9,10 @@ mv *thumb* scratch
 mv *.nd scratch
 
 # For _TRIAL_01__
-find . -name "*.TIF" | awk -F "_" -v mvcmd='mv "%s" "%s"\n' '{old=$0; gsub(/s/,"",$5); gsub(/t/,"",$6); new=sprintf("%s_%s_%s_%ss%02d_t%02d.tif", $1,$2,$3,$4,$5,$6); printf mvcmd,old,new;}' | sh
+#find . -name "*.TIF" | awk -F "_" -v mvcmd='mv "%s" "%s"\n' '{old=$0; gsub(/s/,"",$5); gsub(/t/,"",$6); new=sprintf("%s_%s_%s_%ss%02d_t%02d.tif", $1,$2,$3,$4,$5,$6); printf mvcmd,old,new;}' | sh
 
 # For _trial01_
-#find . -name "*.TIF" | awk -F "_" -v mvcmd='mv "%s" "%s"\n' '{old=$0; gsub(/s/,"",$3); gsub(/t/,"",$4); new=sprintf("%s_%s_s%02d_t%02d.tif", $1,$2,$3,$4); printf mvcmd,old,new;}' | sh
+find . -name "*.TIF" | awk -F "_" -v mvcmd='mv "%s" "%s"\n' '{old=$0; gsub(/s/,"",$3); gsub(/t/,"",$4); new=sprintf("%s_%s_s%02d_t%02d.tif", $1,$2,$3,$4); printf mvcmd,old,new;}' | sh
 
 # Making folders for each well and moving the images into the folders
 for i in {01..24..1}; do

@@ -36,22 +36,22 @@ for image_sequence in /srv/image_processing_folder/*trial*; do
 	cd ${image_sequence}
 	# Getting the image sequence basename
 	sequence_name=${PWD##*/}
-	echo "\nProcessing ${sequence_name}\n\n"
+	printf "\nProcessing ${sequence_name}\n\n"
 	
 	# Fixes all the names and organizes into folder
-	echo "Organizing names\n"
+	printf "Organizing names\n"
 	bash /home/cedar/git/organize_and_process_microscope_images/bash/organize_image_sequence_folder.sh
 
 	# Compress for upload
-	echo "Compressing for upload\n"
+	printf "Compressing for upload\n"
 	tar -czvf /srv/image_processing_folder/compressed/${sequence_name}.tar.gz ${image_sequence}
 
 	# Upload to Google Drive
-	echo "Uploading compressed image sequence to Google Drive\n"
-	#rclone etc etc
+	printf "Uploading compressed image sequence to Google Drive\n"
+	rclone copy /srv/image_processing_folder/compressed/${sequence_name}.tar.gz gdrive_ua:/microscope_images/ -v
 
-	# Makes movies
-	echo "Making movies\n"
+	# Makes videos
+	printf "Making videos\n"
 	find "$(pwd -P)" -maxdepth 1 -name "*_*" -not -name "temp_video_frame_output" -exec \
 	python /home/cedar/git/make_video_from_images/python/make_video_from_images.py \
 		-i {} \
@@ -59,17 +59,21 @@ for image_sequence in /srv/image_processing_folder/*trial*; do
 
 	mkdir ${sequence_name}_videos
 	
-	# Moves all the videos into the same directory
+	# Moves all the videos into the same directory then into the videos dir
 	find -name "*.mp4" -not -path "./${sequence_name}_videos/*" -exec mv {} ./${sequence_name}_videos \;
+	mv ./${sequence_name}_videos /srv/image_processing_folder/videos/
 
-	# Uploading movies to Google Drive
-	echo "Uploading movies to Google Drive\n"
-	#rclone etc etc
+	# Uploading videos to Google Drive
+	printf "Uploading videos to Google Drive\n"
+	rclone copy /srv/image_processing_folder/videos/${sequence_name}_videos gdrive_ua:/microscope_videos/${sequence_name}_videos -v	
+
+	# Moved to "processed" folder
+	mv ${image_sequence} /srv/image_processing_folder/processed
 	
-	echo "Finished processing ${sequence_name}\n"
+	printf "Finished processing ${sequence_name}\n"
 
 done
 
 conda deactivate
 
-echo "Finished processing all\n\n"
+printf "Finished processing all\n\n"
