@@ -77,6 +77,13 @@ for image_sequence in /srv/image_processing_folder/*trial*; do
 
 done
 
+# Cleaning up
 conda deactivate
+shopt -u nullglob
 
-printf "Finished processing all\n\n"
+if test -n /srv/image_processing_folder/*trial*
+then
+	printf "No image sequences to process\n\n"
+else
+	printf "Finished processing all\n\n"
+fi
