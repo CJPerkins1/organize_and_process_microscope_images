@@ -62,7 +62,6 @@ for image_sequence in /Users/cdwarman/Desktop/Science/computer_vision/confocal_t
 		printf "\nProcessing ${well}\n"
 		mkdir ${sequence_name}_stabilized_images/${well}
 		cd ${well}
-		# Add opencv, numpy, python_video_stab to virtual environment
 		python /Users/cdwarman/git/image_seq_stab/python/stab_image_seq.py
 		mv *_stab.tif ../${sequence_name}_stabilized_images/${well}
 		cd ..
