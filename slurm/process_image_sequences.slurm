@@ -9,7 +9,7 @@
 #SBATCH --partition=standard
 #SBATCH --output=%x_%A_%a.out
 #SBATCH --error=%x_%A_%a.err
-#SBATCH --array=1-43
+#SBATCH --array=1-1%100
 
 # Sourcing my .bashrc so that conda works and the path is how it should be
 source /home/u16/cedar/.bashrc
@@ -23,7 +23,7 @@ conda activate process-microscope-images
 cd /xdisk/rpalaniv/cedar/image_processing/source_tifs/
 
 # Setting up the array
-image_sequence=$(find . -name '*run*' | sed -n ${SLURM_ARRAY_TASK_ID}p)
+image_sequence=$(find . -maxdepth 1 -name '*run*' | sed -n ${SLURM_ARRAY_TASK_ID}p)
 
 # Check to see if you have to do this
 # source /home/cedar/opt/conda/etc/profile.d/conda.sh
@@ -92,33 +92,10 @@ done
 
 mv ${sequence_name}_videos /xdisk/rpalaniv/cedar/image_processing/videos
 
+#### For now not using rclone, have a Timer set up with Globus
 
-#### To here
-
-
-# Uploading videos to Google Drive
-printf "Uploading videos to Google Drive\n"
-#rclone copy /srv/image_processing_folder/videos/${sequence_name}_videos gdrive_ua:/microscope_videos/${sequence_name}_videos -v	
-
-
-
-
-# Upload compressed images to Google Drive
-printf "Uploading compressed image sequence to Google Drive\n"
-# rclone copy /srv/image_processing_folder/compressed/${sequence_name}.tar.gz gdrive_ua:/microscope_images/ -v
-
-# Uploading montages to Google Drive
-printf "Uploading montages to Google Drive\n"
-# Figure out the paths of the montage folders, make google drive folder for them
-# rclone copy /srv/image_processing_folder/compressed/${sequence_name}.tar.gz gdrive_ua:/microscope_montages/ -v
-
-
-
-#Decide that to delete, what to keep, and where to put it (move compressed ###
-#image sequences, montages, vids to external hard drive ###
-
-## Moved to "processed" folder
-#mv ${image_sequence} /srv/image_processing_folder/processed
+# Moved to "processed" folder
+mv ${sequence_name} /xdisk/rpalaniv/cedar/image_processing/processed_tifs 
 #
 #printf "Finished processing ${sequence_name}\n"
 
