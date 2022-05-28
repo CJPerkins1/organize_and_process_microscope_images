@@ -9,7 +9,6 @@
 #SBATCH --partition=standard
 #SBATCH --output=%x_%A_%a.out
 #SBATCH --error=%x_%A_%a.err
-#SBATCH --array=1-1%100
 
 # Sourcing my .bashrc so that conda works and the path is how it should be
 source /home/u16/cedar/.bashrc
@@ -27,7 +26,13 @@ image_sequence=$(find . -maxdepth 1 -name '*run*' | sed -n ${SLURM_ARRAY_TASK_ID
 
 # Check to see if you have to do this
 # source /home/cedar/opt/conda/etc/profile.d/conda.sh
- 
+
+# Making sure it's not blank
+if [ ${image_sequence} = "" ]
+then
+	echo "Image sequence is blank, exiting"
+	exit 1
+fi
 
 # Looping through the image sequence folder
 printf "Image sequence variable is: ${image_sequence}\n"
@@ -54,7 +59,12 @@ tar -czvf /xdisk/rpalaniv/cedar/image_processing/compressed_tifs/${sequence_name
 printf "Making montages\n"
 # Setting thread limit
 MAGICK_THREAD_LIMIT=8
-bash /home/u16/cedar/git/organize_and_process_microscope_images/bash/imagemagick_make_preview_montage.sh
+
+# For the original PMT trans camera
+# bash /home/u16/cedar/git/organize_and_process_microscope_images/bash/imagemagick_make_preview_montage.sh
+
+# For the new DFC340 camera
+bash /home/u16/cedar/git/organize_and_process_microscope_images/bash/imagemagick_make_preview_montage_DFC340.sh
 mv ${sequence_name}_montage /xdisk/rpalaniv/cedar/image_processing/montages
 
 
@@ -95,6 +105,7 @@ mv ${sequence_name}_videos /xdisk/rpalaniv/cedar/image_processing/videos
 #### For now not using rclone, have a Timer set up with Globus
 
 # Moved to "processed" folder
+cd ..
 mv ${sequence_name} /xdisk/rpalaniv/cedar/image_processing/processed_tifs 
 #
 #printf "Finished processing ${sequence_name}\n"
