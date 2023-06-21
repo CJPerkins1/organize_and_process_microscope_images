@@ -104,7 +104,7 @@ mv ${sequence_name}_videos /xdisk/rpalaniv/cedar/cv/images/videos
 #### For now not using rclone, have a Timer set up with Globus
 
 # Moved to "processed" folder
-cd ..
+cd /xdisk/rpalaniv/cedar/cv/images/source_tifs 
 mv ${sequence_name} /xdisk/rpalaniv/cedar/cv/images/processed_tifs 
 #
 #printf "Finished processing ${sequence_name}\n"
