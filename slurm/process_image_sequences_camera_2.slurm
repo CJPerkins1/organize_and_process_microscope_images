@@ -50,7 +50,7 @@ printf "Organizing names\n"
 bash /home/u16/cedar/git/organize_and_process_microscope_images/bash/leica_organize_image_seq_folder.sh
 
 
-# Compress organized images for Google Drive upload
+# Compress organized images for upload
 printf "Compressing images for upload\n"
 tar -czvf /xdisk/rpalaniv/cedar/cv/images/compressed_tifs/${sequence_name}.tar.gz .
 
@@ -70,26 +70,25 @@ mv ${sequence_name}_montage /xdisk/rpalaniv/cedar/cv/images/montages
 
 # Stabilizing image sequences for videos
 printf "Stabilizing\n"
-mkdir ${sequence_name}_normalized_stabilized_images
+mkdir /xdisk/rpalaniv/cedar/cv/images/normalized_stabilized/${sequence_name}_normalized_stabilized
 for well in well_*; do
 	printf "\nProcessing ${well}\n"
-	mkdir ${sequence_name}_normalized_stabilized_images/${well}
+	mkdir /xdisk/rpalaniv/cedar/cv/images/normalized_stabilized/${sequence_name}_normalized_stabilized/${well}
 	cd ${well}
 	python /home/u16/cedar/git/image_seq_stab/python/stab_image_seq_camera_2.py
-	mv *_stab.tif ../${sequence_name}_normalized_stabilized_images/${well}
+	mv *_stab.tif /xdisk/rpalaniv/cedar/cv/images/normalized_stabilized/${sequence_name}_normalized_stabilized/${well}
 	cd ..
 done
 
-
 # Make videos
 printf "Making videos\n"
-cd ${sequence_name}_normalized_stabilized_images/
+cd /xdisk/rpalaniv/cedar/cv/images/normalized_stabilized/${sequence_name}_normalized_stabilized/
 find "$(pwd -P)" -maxdepth 1 -name "well_*" -not -name "temp_video_frame_output" -exec \
 python /home/u16/cedar/git/make_video_from_images/python/leica_make_video_from_images.py \
 	-i {} \
 	-o {} \;
 
-cd ..
+# cd ..
 mkdir ${sequence_name}_videos
 
 # Moves all the videos into the same directory then into the videos dir
