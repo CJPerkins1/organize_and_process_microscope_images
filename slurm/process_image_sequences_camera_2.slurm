@@ -11,7 +11,7 @@
 #SBATCH --error=%x_%A_%a.err
 
 # Sourcing my .bashrc so that conda works and the path is how it should be
-source /home/u16/cedar/.bashrc
+source /home/u28/cjperkins1/.bashrc
 
 # Setting nullglob so that globs that match nothing don't make errors
 shopt -s nullglob
@@ -19,7 +19,7 @@ shopt -s nullglob
 # Activating the conda environment
 conda activate process-microscope-images
 
-cd /xdisk/rpalaniv/cedar/cv/images/source_tifs/
+cd /xdisk/rpalaniv/cjperkins1/chronic_hs/images/source_tifs/
 
 # Setting up the array
 image_sequence=$(find . -maxdepth 1 -name '*run*' | sed -n ${SLURM_ARRAY_TASK_ID}p)
@@ -47,12 +47,12 @@ printf "\nProcessing ${sequence_name}\n"
 
 # Fixes all the names and organizes into folder
 printf "Organizing names\n"
-bash /home/u16/cedar/git/organize_and_process_microscope_images/bash/leica_organize_image_seq_folder.sh
+bash /home/u28/cjperkins1/git/organize_and_process_microscope_images/bash/leica_organize_image_seq_folder.sh
 
 
 # Compress organized images for upload
 printf "Compressing images for upload\n"
-tar -czvf /xdisk/rpalaniv/cedar/cv/images/compressed_tifs/${sequence_name}.tar.gz .
+tar -czvf /xdisk/rpalaniv/cjperkins1/chronic_hs/images/compressed_tifs/${sequence_name}.tar.gz .
 
 
 # Make montages
@@ -64,27 +64,27 @@ MAGICK_THREAD_LIMIT=8
 # bash /home/u16/cedar/git/organize_and_process_microscope_images/bash/imagemagick_make_preview_montage.sh
 
 # For the new DFC340 camera
-bash /home/u16/cedar/git/organize_and_process_microscope_images/bash/imagemagick_make_preview_montage_DFC340.sh
-mv ${sequence_name}_montage /xdisk/rpalaniv/cedar/cv/images/montages
+bash /home/u28/cjperkins1/git/organize_and_process_microscope_images/bash/imagemagick_make_preview_montage_DFC340.sh
+mv ${sequence_name}_montage /xdisk/rpalaniv/cjperkins1/cv/images/montages
 
 
 # Stabilizing image sequences for videos
 printf "Stabilizing\n"
-mkdir /xdisk/rpalaniv/cedar/cv/images/normalized_stabilized/${sequence_name}_normalized_stabilized
+mkdir /xdisk/rpalaniv/cjperkins1/chronic_hs/images/normalized_stabilized/${sequence_name}_normalized_stabilized
 for well in well_*; do
 	printf "\nProcessing ${well}\n"
-	mkdir /xdisk/rpalaniv/cedar/cv/images/normalized_stabilized/${sequence_name}_normalized_stabilized/${well}
+	mkdir /xdisk/rpalaniv/cjperkins1/chronic_hs/images/normalized_stabilized/${sequence_name}_normalized_stabilized/${well}
 	cd ${well}
-	python /home/u16/cedar/git/image_seq_stab/python/stab_image_seq_camera_2.py
-	mv *_stab.tif /xdisk/rpalaniv/cedar/cv/images/normalized_stabilized/${sequence_name}_normalized_stabilized/${well}
+	python /home/u28/cjperkins1/git/image_seq_stab/python/stab_image_seq_camera_2.py
+	mv *_stab.tif /xdisk/rpalaniv/cjperkins1/chronic_hs/images/normalized_stabilized/${sequence_name}_normalized_stabilized/${well}
 	cd ..
 done
 
 # Make videos
 printf "Making videos\n"
-cd /xdisk/rpalaniv/cedar/cv/images/normalized_stabilized/${sequence_name}_normalized_stabilized/
+cd /xdisk/rpalaniv/cjperkins1/chronic_hs/images/normalized_stabilized/${sequence_name}_normalized_stabilized/
 find "$(pwd -P)" -maxdepth 1 -name "well_*" -not -name "temp_video_frame_output" -exec \
-python /home/u16/cedar/git/make_video_from_images/python/leica_make_video_from_images.py \
+python /home/u28/cjperkins1/git/make_video_from_images/python/leica_make_video_from_images.py \
 	-i {} \
 	-o {} \;
 
@@ -99,13 +99,13 @@ for i in A1 A2 A3 A4 A5 A6 B1 B2 B3 B4 B5 B6 C1 C2 C3 C4 C5 C6 D1 D2 D3 D4 D5 D6
 	mv ./${sequence_name}_videos/well_${i}.mp4 ./${sequence_name}_videos/${sequence_name}_${i}.mp4
 done
 
-mv ${sequence_name}_videos /xdisk/rpalaniv/cedar/cv/images/videos
+mv ${sequence_name}_videos /xdisk/rpalaniv/cjperkins1/chronic_hs/images/videos
 
 #### For now not using rclone, have a Timer set up with Globus
 
 # Moved to "processed" folder
-cd /xdisk/rpalaniv/cedar/cv/images/source_tifs 
-mv ${sequence_name} /xdisk/rpalaniv/cedar/cv/images/processed_tifs 
+cd /xdisk/rpalaniv/cjperkins1/chronic_hs/images/source_tifs 
+mv ${sequence_name} /xdisk/rpalaniv/cjperkins1/chronic_hs/images/processed_tifs 
 #
 #printf "Finished processing ${sequence_name}\n"
 
