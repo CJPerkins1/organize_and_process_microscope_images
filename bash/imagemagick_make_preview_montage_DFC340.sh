@@ -16,13 +16,13 @@ arial_bold_path=${script_path}/../fonts/Arial-Bold.ttf
 
 mkdir ${sequence_name}_montage
 
-# Making the montages (66 frames in 2 hours, using frames 000, 022, 044, 065)
+# Making the montages (60 frames in 2 hours, using frames 000, 022, 044, 060)
 for i in A1 A2 A3 A4 A5 A6 B1 B2 B3 B4 B5 B6 C1 C2 C3 C4 C5 C6 D1 D2 D3 D4 D5 D6; do
 	montage -border 2 -geometry +0+0 -tile 2x2 \
 		well_${i}/${sequence_name}_${i}_t000.tif \
 		well_${i}/${sequence_name}_${i}_t022.tif \
 		well_${i}/${sequence_name}_${i}_t044.tif \
-		well_${i}/${sequence_name}_${i}_t065.tif \
+		well_${i}/${sequence_name}_${i}_t060.tif \
 		${sequence_name}_montage/${sequence_name}_${i}_montage.jpg
 
 	mogrify -font ${arial_bold_path} -fill white -pointsize 65 \
@@ -42,6 +42,6 @@ for i in A1 A2 A3 A4 A5 A6 B1 B2 B3 B4 B5 B6 C1 C2 C3 C4 C5 C6 D1 D2 D3 D4 D5 D6
 		${sequence_name}_montage/${sequence_name}_${i}_montage.jpg		
 
 	mogrify -font ${arial_bold_path} -fill white -pointsize 65 -gravity South \
-		-draw "text 120,40 't065'" \
+		-draw "text 120,40 't060'" \
 		${sequence_name}_montage/${sequence_name}_${i}_montage.jpg		
 done

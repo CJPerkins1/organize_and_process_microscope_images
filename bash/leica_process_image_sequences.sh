@@ -24,8 +24,8 @@
 #    rclone.
 
 # # Sourcing my .bashrc so that conda works and the path is how it should be
-# source /home/cedar/.bashrc
-# source /home/cedar/opt/conda/etc/profile.d/conda.sh
+# source /home/cjperkins1/.bashrc
+# source /home/cjperkins1/opt/conda/etc/profile.d/conda.sh
 # 
 # # Setting nullglob so that globs that match nothing don't make errors
 # shopt -s nullglob

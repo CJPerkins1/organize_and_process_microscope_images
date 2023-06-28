@@ -65,7 +65,7 @@ MAGICK_THREAD_LIMIT=8
 
 # For the new DFC340 camera
 bash /home/u28/cjperkins1/git/organize_and_process_microscope_images/bash/imagemagick_make_preview_montage_DFC340.sh
-mv ${sequence_name}_montage /xdisk/rpalaniv/cjperkins1/cv/images/montages
+mv ${sequence_name}_montage /xdisk/rpalaniv/cjperkins1/chronic_hs/images/montages
 
 
 # Stabilizing image sequences for videos
